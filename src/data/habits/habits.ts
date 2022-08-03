@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import { Habit, HabitActionTypes, HabitReducer, HabitsByDay } from "./types";
 import { format } from "date-fns";
 
@@ -48,7 +48,7 @@ export const useHabitsData = (defaultDate: Date, habitsData?: HabitsByDay) => {
     habitsData || { [formattedActiveDate]: [], template: [] }
   );
 
-  const getHabits = useCallback(
+  const habits = useMemo(
     () => data[formattedActiveDate] || [],
     [data, formattedActiveDate]
   );
@@ -69,7 +69,7 @@ export const useHabitsData = (defaultDate: Date, habitsData?: HabitsByDay) => {
 
   return {
     setActiveDate: handleActiveDateChange,
-    useGetHabits: getHabits,
-    useUpdateHabits: () => [dispatch],
+    habits,
+    updateHabits: dispatch,
   };
 };

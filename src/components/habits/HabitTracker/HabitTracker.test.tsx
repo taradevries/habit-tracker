@@ -1,32 +1,32 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { faker } from "@faker-js/faker";
 import { format } from "date-fns";
 import DateContext from "../../../context/DateContext";
 import { HabitTracker } from "./HabitTracker";
-import { useHabitsData } from "../../../data/habits/habits";
-import userEvent from "@testing-library/user-event";
+import { Habit } from "../../../data/habits/types";
 
 jest.mock("../../../data/habits/habits", () => ({
-  useHabitsData: (_: Date) => ({
-    useGetHabits: jest.fn().mockReturnValue([]),
-    useUpdateHabits: jest.fn().mockReturnValue([jest.fn()]),
-    setActiveDate: jest.fn(),
-  }),
+  useHabitsData: () => mockUseHabitsData(),
 }));
 
-const mockUseHabitsData = useHabitsData as jest.MockedFunction<
-  typeof useHabitsData
->;
+let mockUseHabitsData = jest.fn(() => useHabitsDataMockReturnValue);
 
-const useHabitsDataMockValue = {
-  useGetHabits: jest.fn().mockReturnValue([]),
-  useUpdateHabits: jest.fn().mockReturnValue([jest.fn()]),
+const useHabitsDataMockReturnValue = {
+  habits: [] as Habit[],
+  updateHabits: jest.fn(),
   setActiveDate: jest.fn(),
 };
 
-const makeHabit = () => ({
-  text: faker.lorem.text(),
+beforeEach(() => {
+  // because default CRA 4+ config resets mocks after each test
+  mockUseHabitsData = jest.fn(() => useHabitsDataMockReturnValue);
+});
+
+const makeHabit = (overrides?: any) => ({
+  text: faker.lorem.sentence(),
   completed: faker.datatype.boolean(),
+  ...overrides,
 });
 
 describe("HabitTracker component", () => {
@@ -51,31 +51,40 @@ describe("HabitTracker component", () => {
     ).toBeInTheDocument();
   });
 
-  test("toggles the completion status of the active date", async () => {
-    const habitMock = makeHabit();
-    const habitMockToggled = { ...habitMock, completed: !habitMock.completed };
-    mockUseHabitsData.mockReturnValue({
-      ...useHabitsDataMockValue,
-      useGetHabits: jest
-        .fn()
-        .mockReturnValueOnce([habitMock])
-        .mockReturnValue([habitMockToggled]),
-    });
-    const onToggleCompletedMock = jest.fn();
-    render(
-      <DateContext.Provider
-        value={{
-          activeDate: faker.date.soon(),
-          onActiveDateChange: jest.fn(),
-          onToggleCompleted: onToggleCompletedMock,
-        }}
-      >
-        <HabitTracker />
-      </DateContext.Provider>
-    );
-    userEvent.click(screen.getByLabelText(habitMock.text));
-    await waitFor(() => {
-      expect(onToggleCompletedMock).toHaveBeenCalled();
-    });
-  });
+  test.each([[true], [false]])(
+    "toggles the completion status of the active date when initial is %s",
+    async (initial: boolean) => {
+      const habitMock = makeHabit({ completed: initial });
+      const habitMockToggled = {
+        ...habitMock,
+        completed: !habitMock.completed,
+      };
+      mockUseHabitsData
+        .mockReturnValueOnce({
+          ...useHabitsDataMockReturnValue,
+          habits: [habitMock],
+        })
+        .mockReturnValue({
+          ...useHabitsDataMockReturnValue,
+          habits: [habitMockToggled],
+        });
+      const onToggleCompletedMock = jest.fn();
+      render(
+        <DateContext.Provider
+          value={{
+            activeDate: faker.date.soon(),
+            onActiveDateChange: jest.fn(),
+            onToggleCompleted: onToggleCompletedMock,
+          }}
+        >
+          <HabitTracker />
+        </DateContext.Provider>
+      );
+      userEvent.click(screen.getByLabelText(habitMock.text));
+      await waitFor(() => {
+        expect(onToggleCompletedMock).toHaveBeenCalled();
+      });
+      expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
+    }
+  );
 });

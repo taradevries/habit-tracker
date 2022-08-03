@@ -7,9 +7,9 @@ describe("useHabitsData", () => {
   test("initializes with empty data", () => {
     const { result } = renderHook(() => useHabitsData(new Date(2022, 6, 31)));
 
-    const { useGetHabits } = result.current;
+    const { habits } = result.current;
 
-    expect(useGetHabits()).toStrictEqual([]);
+    expect(habits).toStrictEqual([]);
   });
 
   test("initializes with provided data", () => {
@@ -21,9 +21,9 @@ describe("useHabitsData", () => {
       useHabitsData(new Date(2022, 6, 31), initialData)
     );
 
-    const { useGetHabits } = result.current;
+    const { habits } = result.current;
 
-    expect(useGetHabits()).toStrictEqual([
+    expect(habits).toStrictEqual([
       { text: "write unit tests", completed: true },
     ]);
   });
@@ -37,16 +37,16 @@ describe("useHabitsData", () => {
       useHabitsData(new Date(2022, 6, 31), initialData)
     );
 
-    const [dispatch] = result.current.useUpdateHabits();
+    const { updateHabits } = result.current;
 
     act(() =>
-      dispatch({
+      updateHabits({
         type: HabitActionTypes.addHabbit,
         data: { text: "test the reducer", completed: false },
       })
     );
 
-    expect(result.current.useGetHabits()).toStrictEqual([
+    expect(result.current.habits).toStrictEqual([
       { text: "write unit tests", completed: true },
       { text: "test the reducer", completed: false },
     ]);
@@ -66,16 +66,16 @@ describe("useHabitsData", () => {
         useHabitsData(new Date(2022, 6, 31), initialData)
       );
 
-      const [dispatch] = result.current.useUpdateHabits();
+      const { updateHabits } = result.current;
 
       act(() =>
-        dispatch({
+        updateHabits({
           type: HabitActionTypes.toggleHabitCompletion,
           data: { text: "write unit tests", completed: initial },
         })
       );
 
-      expect(result.current.useGetHabits()).toStrictEqual([
+      expect(result.current.habits).toStrictEqual([
         { text: "write unit tests", completed: expected },
       ]);
     }
@@ -91,11 +91,11 @@ describe("useHabitsData", () => {
     );
 
     const { setActiveDate } = result.current;
-    expect(result.current.useGetHabits()).toStrictEqual([]);
+    expect(result.current.habits).toStrictEqual([]);
 
     act(() => setActiveDate(new Date(2022, 6, 31)));
 
-    expect(result.current.useGetHabits()).toStrictEqual([
+    expect(result.current.habits).toStrictEqual([
       { text: "write unit tests", completed: false },
     ]);
   });
@@ -113,14 +113,14 @@ describe("useHabitsData", () => {
     );
 
     const { setActiveDate } = result.current;
-    expect(result.current.useGetHabits()).toStrictEqual([
+    expect(result.current.habits).toStrictEqual([
       { text: "write unit tests", completed: false },
     ]);
 
     act(() => setActiveDate(new Date(2022, 7, 1)));
 
     await waitFor(() =>
-      expect(result.current.useGetHabits()).toStrictEqual([
+      expect(result.current.habits).toStrictEqual([
         { text: "write unit tests", completed: false },
         { text: "write documentation", completed: false },
       ])
