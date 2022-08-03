@@ -5,7 +5,11 @@ import DateContext from "../../context/DateContext";
 import "react-day-picker/dist/style.css";
 
 const completedStyles = {
-  backgroundColor: "#F00",
+  backgroundColor: "#d63a4f",
+};
+
+const selectedStyles = {
+  backgroundColor: "#94cdff",
 };
 
 export const Calendar: FC = () => {
@@ -22,7 +26,7 @@ export const Calendar: FC = () => {
       selected={activeDate}
       onSelect={handleActiveDateChange}
       modifiers={{ completed: completedDates }}
-      modifiersStyles={{ completed: completedStyles }}
+      modifiersStyles={{ completed: completedStyles, selected: selectedStyles }}
     />
   );
 };

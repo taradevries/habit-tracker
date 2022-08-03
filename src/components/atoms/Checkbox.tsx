@@ -7,6 +7,12 @@ const Label = styled.label`
   padding-left: 35px;
   margin-bottom: 12px;
   font-size: 22px;
+  cursor: pointer;
+  & > span:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
   input:checked ~ span:after {
     display: block;
   }
@@ -21,20 +27,18 @@ const Input = styled.input`
 
 const Checkmark = styled.span`
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  height: 25px;
-  width: 25px;
-  align-self: center;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
   background: transparent;
-  padding: 1rem 1rem;
-  margin: 0 1rem;
   transition: all 0.5s ease;
   color: #41403e;
   font-size: 2rem;
   letter-spacing: 1px;
   outline: none;
-  box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
+  border: solid 2px #41403e;
   border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
   /*
     Above is shorthand for:
@@ -45,9 +49,15 @@ const Checkmark = styled.span`
   */
 
   &:after {
-    content: "";
-    position: absolute;
-    display: none;
+    left: 8px;
+    top: -6px;
+    width: 8px;
+    height: 20px;
+    border: solid #d63a4f;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
   }
 `;
 

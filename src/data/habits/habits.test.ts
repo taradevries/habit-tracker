@@ -42,7 +42,7 @@ describe("useHabitsData", () => {
     act(() =>
       updateHabits({
         type: HabitActionTypes.addHabbit,
-        data: { text: "test the reducer", completed: false },
+        data: "test the reducer",
       })
     );
 

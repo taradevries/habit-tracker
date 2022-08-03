@@ -22,6 +22,7 @@ export const HabitTracker: FC = () => {
   }, [activeDate, setActiveDate]);
 
   const areAllHabitsComplete = () =>
+    !!habits.length &&
     habits.reduce((prev, { completed }) => prev && completed, true);
 
   const willAllHabitsBeComplete = (habit: Habit) =>
@@ -39,6 +40,7 @@ export const HabitTracker: FC = () => {
 
   const handleHabitAdded = (habitText: string) => {
     updateHabits({ type: HabitActionTypes.addHabbit, data: habitText });
+    if (areAllHabitsComplete()) onToggleCompleted();
   };
 
   const validateHabit = (habitText: string) =>

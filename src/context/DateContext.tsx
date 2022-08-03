@@ -36,7 +36,7 @@ const DateContextProvider: FC = ({ children }) => {
 
     setCompletedDates([
       ...completedDates.slice(0, dateIdx),
-      ...completedDates.slice(dateIdx, completedDates.length),
+      ...completedDates.slice(dateIdx + 1, completedDates.length),
     ]);
   };
 

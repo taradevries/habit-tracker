@@ -6,6 +6,7 @@ import { Habit } from "../Habit/Habit";
 
 const List = styled.ul`
   list-style-type: none;
+  padding-left: 0;
 `;
 
 const ListItem = styled.li`

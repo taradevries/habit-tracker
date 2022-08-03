@@ -37,6 +37,7 @@ export const Habit: FC<HabitProps> = ({
   ) : (
     text
   );
+
   return (
     <Checkbox
       label={checkboxLabel}

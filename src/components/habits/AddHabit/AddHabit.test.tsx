@@ -24,6 +24,7 @@ describe("AddHabit component", () => {
     );
     expect(mockValidate).toHaveBeenCalled();
     expect(mockHabbitAdded).toHaveBeenCalledWith(habitText);
+    expect(screen.getByRole("textbox", { name: /add habit/i })).toHaveValue("");
   });
 
   test("does not call onHabitAdded when Enter key is hit if input is invalid", () => {

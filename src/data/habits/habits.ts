@@ -13,7 +13,7 @@ export const useHabitsData = (defaultDate: Date, habitsData?: HabitsByDay) => {
     (state, action): HabitsByDay => {
       switch (action.type) {
         case HabitActionTypes.addHabbit: {
-          const newHabit = action.data as Habit;
+          const newHabit = { text: action.data as string, completed: false };
           return {
             ...state,
             [formattedActiveDate]: [...state[formattedActiveDate], newHabit],
@@ -29,7 +29,7 @@ export const useHabitsData = (defaultDate: Date, habitsData?: HabitsByDay) => {
           const newActiveDateHabits = [
             ...currentHabits.slice(0, habitToUpdateIdx),
             { ...habitToUpdate, completed: !habitToUpdate.completed },
-            ...currentHabits.slice(habitToUpdateIdx, currentHabits.length - 1),
+            ...currentHabits.slice(habitToUpdateIdx + 1, currentHabits.length),
           ];
           return {
             ...state,

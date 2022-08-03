@@ -15,6 +15,9 @@ const AddHabitWrapper = styled.div``;
 const AddHabitInput = styled.input`
   background-color: transparent;
   border: none;
+  font-size: 1rem;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
 `;
 
 interface AddHabitProps {
@@ -26,7 +29,7 @@ export const AddHabit: FC<AddHabitProps> = ({
   onHabitAdded,
   validateHabit,
 }) => {
-  const [newHabit, setNewHabit] = useState<string>();
+  const [newHabit, setNewHabit] = useState<string>("");
 
   const handleValueChanged = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setNewHabit(target.value);
@@ -34,7 +37,10 @@ export const AddHabit: FC<AddHabitProps> = ({
 
   const handleKeyDown = ({ key }: KeyboardEvent<HTMLInputElement>) => {
     if (key !== "Enter") return;
-    if (newHabit && validateHabit(newHabit)) onHabitAdded(newHabit);
+    if (newHabit && validateHabit(newHabit)) {
+      onHabitAdded(newHabit);
+      setNewHabit("");
+    }
   };
 
   return (
@@ -48,6 +54,7 @@ export const AddHabit: FC<AddHabitProps> = ({
         type="text"
         onChange={handleValueChanged}
         onKeyDown={handleKeyDown}
+        value={newHabit}
       />
     </AddHabitWrapper>
   );

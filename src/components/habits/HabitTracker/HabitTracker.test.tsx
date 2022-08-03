@@ -81,10 +81,35 @@ describe("HabitTracker component", () => {
         </DateContext.Provider>
       );
       userEvent.click(screen.getByLabelText(habitMock.text));
-      await waitFor(() => {
-        expect(onToggleCompletedMock).toHaveBeenCalled();
-      });
+
+      expect(onToggleCompletedMock).toHaveBeenCalled();
+
       expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
     }
   );
+
+  test("toggles the completion status when habits are completed and new habit is added", () => {
+    const habitMock = makeHabit({ completed: true });
+    const addedHabit = faker.lorem.sentence();
+    mockUseHabitsData.mockReturnValue({
+      ...useHabitsDataMockReturnValue,
+      habits: [habitMock],
+    });
+    const onToggleCompletedMock = jest.fn();
+    render(
+      <DateContext.Provider
+        value={{
+          activeDate: faker.date.soon(),
+          onActiveDateChange: jest.fn(),
+          onToggleCompleted: onToggleCompletedMock,
+        }}
+      >
+        <HabitTracker />
+      </DateContext.Provider>
+    );
+    userEvent.type(screen.getByLabelText(/add habit/i), `${addedHabit}{enter}`);
+
+    expect(onToggleCompletedMock).toHaveBeenCalled();
+    expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
+  });
 });
