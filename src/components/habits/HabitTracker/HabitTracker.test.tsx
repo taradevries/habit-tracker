@@ -73,7 +73,7 @@ describe("HabitTracker component", () => {
   test("toggles the completion status when habits are completed and new habit is added", () => {
     const habitMock = makeHabit({ completed: true });
     const addedHabit = faker.lorem.sentence();
-    mockUseHabitsData.mockReturnValue({
+    mockUseHabitsData.mockReturnValueOnce({
       ...useHabitsDataMockReturnValue,
       habits: [habitMock],
     });
