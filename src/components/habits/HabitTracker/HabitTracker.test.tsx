@@ -20,13 +20,13 @@ const useHabitsDataMockReturnValue = {
   setActiveDate: jest.fn(),
 };
 
+let mockUseDate = jest.fn(() => useDateMockReturnValue);
+
 const useDateMockReturnValue = {
   activeDate: faker.date.soon(),
   onActiveDateChange: jest.fn(),
   onToggleCompleted: jest.fn(),
 };
-
-let mockUseDate = jest.fn(() => useDateMockReturnValue);
 
 beforeEach(() => {
   // because default CRA 4+ config resets mocks after each test
