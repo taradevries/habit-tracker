@@ -1,7 +1,7 @@
-import React, { FC, useContext, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import styled from "styled-components";
 import { format } from "date-fns";
-import DateContext from "../../../context/DateContext";
+import { useDate } from "../../../context/DateContext";
 import { useHabitsData } from "../../../data/habits/habits";
 import { Habit, HabitActionTypes } from "../../../data/habits/types";
 import { HabitList } from "../HabitList/HabitList";
@@ -12,7 +12,7 @@ const Title = styled.h2`
 `;
 
 export const HabitTracker: FC = () => {
-  const { activeDate, onToggleCompleted } = useContext(DateContext);
+  const { activeDate, onToggleCompleted } = useDate();
   const { habits, updateHabits, setActiveDate } = useHabitsData(activeDate);
 
   const formattedActiveDate = format(activeDate, "iiii, MMMM do");

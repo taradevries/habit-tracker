@@ -6,7 +6,7 @@ describe("Habit component", () => {
   test("renders a completed habit", () => {
     render(<Habit text="test habit" completed />);
     // the following expects are functionally equivalent
-    // but toBeChecked gives better feedback:
+    // but toBeChecked gives better feedback when failing:
     // expect(
     //   screen.getByRole("checkbox", { name: /test habit/i, checked: true })
     // ).toBeInTheDocument();
@@ -16,7 +16,7 @@ describe("Habit component", () => {
   test("renders an uncompleted habit", () => {
     render(<Habit text="test habit" />);
     // the following expects are functionally equivalent:
-    // but toBeChecked gives better feedback:
+    // but toBeChecked gives better feedback when failing:
     // expect(
     //   screen.getByRole("checkbox", { name: /test habit/i, checked: false })
     // ).toBeInTheDocument();

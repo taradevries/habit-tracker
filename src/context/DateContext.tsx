@@ -1,25 +1,10 @@
 import { isSameDay, startOfDay } from "date-fns";
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
+import { DateContextValue } from "./types";
 
-export interface DateContextValue {
-  activeDate: Date;
-  completedDates?: Date[];
-  onActiveDateChange: (date?: Date) => void;
-  onToggleCompleted: () => void;
-}
-
-const initialValue: DateContextValue = {
-  activeDate: new Date(),
-  completedDates: [],
-  onActiveDateChange: (_) => {
-    return;
-  },
-  onToggleCompleted: () => {
-    return;
-  },
-};
-
-const DateContext = React.createContext(initialValue);
+const DateContext = React.createContext<DateContextValue | undefined>(
+  undefined
+);
 
 const DateContextProvider: FC = ({ children }) => {
   const [activeDate, setActiveDate] = useState<Date>(new Date());
@@ -54,5 +39,12 @@ const DateContextProvider: FC = ({ children }) => {
   );
 };
 
-export default DateContext;
-export { DateContextProvider };
+const useDate = () => {
+  const context = useContext(DateContext);
+  if (context === undefined) {
+    throw new Error("useDate was not used within a DateProvider");
+  }
+  return context;
+};
+
+export { DateContextProvider, useDate };
