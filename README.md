@@ -1,5 +1,5 @@
 # habit-tracker
-This is a demo app that I built for the front-end unit testing workshop on 3/Aug/2022
+This is a demo app that I built for the front-end unit testing workshop on 3/Aug/2022. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Unit testing examples
 
@@ -27,3 +27,22 @@ This suite also contains another example of using `test.each()`, wherein the inp
 
 ### DateContext.test.tsx
 Last but not least, this test suite is the second example of unit testing a custom hook, this time with respect to React Context. Exposing a custom hook is a great way to encapusulate the context logic, and as it turns out, makes it easier to test because we can focus on just the behavior without writing custom rendering logic for the Context Provider/Consumer. 
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+To get test coverage information, use `npm test -- --coverage --watchAll=false`
