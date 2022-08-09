@@ -51,26 +51,47 @@ describe("HabitTracker component", () => {
     ).toBeInTheDocument();
   });
 
-  test.each([[true], [false]])(
-    "toggles the completion status of the active date when initial is %s",
-    async (initial: boolean) => {
-      const habitMock = makeHabit({ completed: initial });
-      mockUseHabitsData.mockReturnValueOnce({
-        ...useHabitsDataMockReturnValue,
-        habits: [habitMock],
-      });
-      const onToggleCompletedMock = useDateMockReturnValue.onToggleCompleted;
+  test.each([
+    [
+      "toggles the completion status of active date when marking a habit incomplete",
+      true,
+    ],
+    [
+      "toggles the completion status of active date when all habits are completed",
+      false,
+    ],
+  ])("%s", async (_: string, initial: boolean) => {
+    const habitMock = makeHabit({ completed: initial });
+    mockUseHabitsData.mockReturnValueOnce({
+      ...useHabitsDataMockReturnValue,
+      habits: [habitMock],
+    });
+    const onToggleCompletedMock = useDateMockReturnValue.onToggleCompleted;
 
-      render(<HabitTracker />);
+    render(<HabitTracker />);
 
-      userEvent.click(screen.getByLabelText(habitMock.text));
+    userEvent.click(screen.getByLabelText(habitMock.text));
 
-      expect(onToggleCompletedMock).toHaveBeenCalled();
-      expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
-    }
-  );
+    expect(onToggleCompletedMock).toHaveBeenCalled();
+    expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
+  });
 
-  test("toggles the completion status when habits are completed and new habit is added", () => {
+  test("does not toggle completion status of the active date when not all habits are completed", () => {
+    const habitMock = makeHabit({ completed: false });
+    mockUseHabitsData.mockReturnValueOnce({
+      ...useHabitsDataMockReturnValue,
+      habits: [habitMock, makeHabit({ completed: false })],
+    });
+    const onToggleCompletedMock = useDateMockReturnValue.onToggleCompleted;
+
+    render(<HabitTracker />);
+
+    userEvent.click(screen.getByLabelText(habitMock.text));
+
+    expect(onToggleCompletedMock).not.toHaveBeenCalled();
+  });
+
+  test("toggles the completion status when new habit is added and existing habits are completed", () => {
     const habitMock = makeHabit({ completed: true });
     const addedHabit = faker.lorem.sentence();
     mockUseHabitsData.mockReturnValueOnce({
@@ -85,5 +106,21 @@ describe("HabitTracker component", () => {
 
     expect(onToggleCompletedMock).toHaveBeenCalled();
     expect(onToggleCompletedMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not toggle the completion status when new habit is added and existing habits are incomplete", () => {
+    const habitMock = makeHabit({ completed: false });
+    const addedHabit = faker.lorem.sentence();
+    mockUseHabitsData.mockReturnValueOnce({
+      ...useHabitsDataMockReturnValue,
+      habits: [habitMock],
+    });
+    const onToggleCompletedMock = useDateMockReturnValue.onToggleCompleted;
+
+    render(<HabitTracker />);
+
+    userEvent.type(screen.getByLabelText(/add habit/i), `${addedHabit}{enter}`);
+
+    expect(onToggleCompletedMock).not.toHaveBeenCalled();
   });
 });
